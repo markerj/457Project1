@@ -7,7 +7,7 @@ public class Server {
  	public static void main (String [] args ) throws IOException {
        	//getting user input
         boolean validFile = false;
-		boolean validPortNum = false;
+	boolean validPortNum = false;
         int portNum = 0;
         String ipAddr = null;
         Console cons = System.console();
@@ -43,11 +43,11 @@ public class Server {
         		try {
           			sock = servsock.accept();
           			System.out.println("Connection established: " + sock);
-	  				inFromClient = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+	  			inFromClient = new BufferedReader(new InputStreamReader(sock.getInputStream()));
           			clientSentence = inFromClient.readLine();
           			System.out.println("Client is requesting file: " + clientSentence);
-	  				inFromClient.close();
-	  				sock = servsock.accept(); 
+	  			inFromClient.close();
+	  			sock = servsock.accept(); 
 	 
           			File myFile = new File (clientSentence);
 	  				// check if myFile.exists() here?
@@ -65,10 +65,7 @@ public class Server {
           				os.write(byteArray,0,byteArray.length);
           				os.flush();
           				System.out.println("File sent");
-	  				}
-	  
-                 
-			
+					}
         		}
  				finally {
           			bis.close();
