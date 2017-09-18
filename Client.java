@@ -6,13 +6,11 @@ import java.net.*;
 
 public class Client {
 
-//  public final static int SOCKET_PORT = 13267;      
-//  public final static String SERVER = "127.0.0.1";  
 
 	public static void main (String [] args ) throws IOException {
-    //getting user input   
+   	 //getting user input   
 	
-		boolean validPortNum = false;
+	boolean validPortNum = false;
         boolean validIpAddr = false;
         int portNum = 0;
         String ipAddr = null;
