@@ -3,9 +3,7 @@ import java.nio.*;
 import java.io.ByteArrayOutputStream;
 import java.net.*;
 
-
 public class Client {
-
 
 	public static void main (String [] args ) throws IOException {
    	 //getting user input   
@@ -67,7 +65,7 @@ public class Client {
 			}
 		}
 
-		String sentence;
+	String sentence;
     	int bytesRead;
     	int current = 0;
     	DataOutputStream outToServer = null;
@@ -76,13 +74,13 @@ public class Client {
     	Socket sock = null;
     	sentence = cons.readLine("Enter the file name to retrieve: ");
     	try {
-			//connect to server 
+		//connect to server 
         	sock = new Socket(ipAddr, portNum);
-			//writing filename client wishes to retrieve from server
-			outToServer = new DataOutputStream(sock.getOutputStream());
- 			outToServer.writeBytes(sentence);
-			outToServer.close();
-			//reconnect to server.. can't have both dataoutputstream and fileoutputstream active on the same socket.
+		//writing filename client wishes to retrieve from server
+		outToServer = new DataOutputStream(sock.getOutputStream());
+ 		outToServer.writeBytes(sentence);
+		outToServer.close();
+		//reconnect to server.. can't have both dataoutputstream and fileoutputstream active on the same socket.
       		sock = new Socket(ipAddr, portNum); 
       		byte [] byteArray  = new byte [6500000];
       		InputStream is = sock.getInputStream();
@@ -93,7 +91,7 @@ public class Client {
 	
 			while(bytesRead > -1) {
 	 			bytesRead = is.read(byteArray, current, (byteArray.length-current));
-          		if(bytesRead >= 0) {
+          			if(bytesRead >= 0) {
 	   				current += bytesRead;
             	}	
         	}	
