@@ -84,7 +84,15 @@ public class Client {
       		sock = new Socket(ipAddr, portNum); 
       		byte [] byteArray  = new byte [6500000];
       		InputStream is = sock.getInputStream();
-      		fos = new FileOutputStream("riverdownloaded.jpg");
+      		
+		if(sentence.contains("pdf")) {
+		fos = new FileOutputStream("downloaded.pdf");
+     		}
+     		else
+      		{
+      		fos = new FileOutputStream("downloaded.jpg");
+      		}
+		
       		bos = new BufferedOutputStream(fos);
       		bytesRead = is.read(byteArray,0,byteArray.length);
       		current = bytesRead;
