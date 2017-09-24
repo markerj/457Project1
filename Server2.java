@@ -3,146 +3,119 @@ import java.net.*;
 import java.nio.*;
 import java.nio.channels.*;
 
-public class Server {
+public class Server2 {
 
  	public static void main (String [] args ) throws IOException {
-       	//getting user input
+     
         boolean validFile = false;
 	boolean validPortNum = false;
         int portNum = 0;
         String ipAddr = null;
-        Console cons = System.console();
-
-        // check for valid port number
-        while(validPortNum == false) {
-        	try{
-        		portNum = Integer.parseInt(cons.readLine("Enter a port number: "));
-        	}
-        	catch(NumberFormatException e){
-        		System.out.println("You may have entered a non integer string");
-        	}
-        	if(portNum >= 1024 && portNum <= 65535){
-        		validPortNum = true;
-        	}
-        	else{
-        		validPortNum = false;
-        		System.out.println("Invalid port number");
-        	}
-        }
-
-    //  	String clientSentence;
-      // 	BufferedReader inFromClient = null;
-       	//FileInputStream fis = null;
-       //	BufferedInputStream bis = null;
-       //	OutputStream os = null;
        	ServerSocket servsock = null;
        	Socket sock = null;
 	
-	
-		try{	  
-  //		 ServerSocketChannel servsock = ServerSocketChannel.open();
-    //            servsock.bind(new InetSocketAddress(portNum));
+		try{
+		portNum = getPort();	
  		servsock = new ServerSocket(portNum);
-	//	}
-	//	catch(IOException e) {}
-
+		System.out.println("Waiting for connection");
       		while (true) {
-        		System.out.println("Waiting for connection");
-        		try {
-//		SocketChannel sock = servsock.accept();
-//		TcpServerThread t = new TcpServerThread(sock);		
+        		
+        		try {		
           		sock = servsock.accept();
 			new ServerThread(sock).start();
-
-
         		}
-			//new ServerThread(sock).start();
-			catch(IOException e) {}
-
-// 				finally {
-        //  			bis.close();
-          //			os.close();
-          //			sock.close();
-       //   servsock.close();
-
+			catch(IOException e){}
         	}	
       		}
-    //	}
-    	finally {
-      	//servsock.close();
-    	}
+     	finally {
+			if (servsock != null)
+				servsock.close();
+		}
+    	
  	}
+ private static int getPort() {
+                int port = 0;
+                boolean valid = false;
+                BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                System.out.println("Enter a port number: ");
+
+                while (!valid) {
+                        try {
+                                port = Integer.parseInt(input.readLine());
+                                if (port > 1024 && port < 65536) {
+                                        valid = true;
+                                } else {
+                                        System.out.println("Invalid Port. \nEnter a port number: ");
+                                }
+                        } catch (NumberFormatException e) {
+				System.out.println("Invalid Port. \nEnter a port number: ");
+                        } catch (IOException e) {
+				System.out.println("Invalid Port. \nEnter a port number: ");
+                        }
+                }
+                System.out.println("connecting to port: " + port);
+
+                return port;
+        }
+
 }
 
 class ServerThread extends Thread {
-    //prot
-     Socket sock = null;
-//SocketChannel sock;
-//TcpServerThread(SocketChannel channel) {
-//	sock = channel;
 
+    Socket sock = null;
     public ServerThread(Socket clientSocket) {
        this.sock = clientSocket;
-//System.out.println("Connection established: " + sock);
 
     }
 
     public void run() {
 	System.out.println("Connection established: " + sock);
-
 	String clientSentence;
         BufferedReader inFromClient = null;
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         OutputStream os = null;
-
+try {
 	try{
-                   //       System.out.println("Connection established: " + sock);
-  //                              inFromClient = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-    //                            clientSentence = inFromClient.readLine();
-      //                          System.out.println("Client is requesting file: " + clientSentence);
-        //                        inFromClient.close();
+                  
+                                	inFromClient = new BufferedReader(new InputStreamReader(sock.getInputStream()));  
+					DataOutputStream outToClient = new DataOutputStream(sock.getOutputStream());
+         				clientSentence = inFromClient.readLine();
+					System.out.println("Client said: " + clientSentence);
+					outToClient.writeBytes(clientSentence + '\n');
 
-//}
-//catch(IOException e) {}
-                                //sock = servsock.accept(); 
-         //
-           //                     	File myFile = new File (clientSentence);
-           				File myFile = new File ("something.pdf");
-                                        // check if myFile.exists() here?
+					String fileToSend = clientSentence.substring(5,clientSentence.length());
+				
+					if (clientSentence.length() > 4) {
+						if (clientSentence.substring(0, 4).toLowerCase().equals("send")) {					
+
+           				File myFile = new File (fileToSend);
+                                        // check if myFile.exists() 
                                         if(!myFile.exists() || myFile.isDirectory()){
                                                 System.out.println("File does not exist");
+						//outToClient.writeBytes("File does not exist");
                                         }
                                         else{
-                                                byte [] byteArray  = new byte [(int)myFile.length()];
+                                        byte [] byteArray  = new byte [(int)myFile.length()];
                                         fis = new FileInputStream(myFile);
                                         bis = new BufferedInputStream(fis);
                                         bis.read(byteArray,0,byteArray.length);
                                         os = sock.getOutputStream();
-
-                                        System.out.println("Sending... ");
                                         os.write(byteArray,0,byteArray.length);
                                         os.flush();
-        
-
     		                        System.out.println("File sent");
-					bis.close();
-			       		os.close();
-      					//sock.close();
-
+					}
+				 
+					}}
 }
-	
+finally{					
+					if (bis != null)
+						bis.close();
+					if (os != null)
+						os.close();
+					if (sock != null)
+						sock.close();
 }
-//finally { 
-//	bis.close();
-//	os.close();
-//	sock.close();
-
-//}
-catch(IOException e) {
- //	bis.close();
-  //      os.close();
-//    	sock.close();
-       }
-//catch(IOException e){}
-}}   
+}catch(IOException e) {}
+}
+}   
