@@ -117,5 +117,6 @@ finally{
 						sock.close();
 }
 }catch(IOException e) {}
+catch(Exception e){}
 }
 }   

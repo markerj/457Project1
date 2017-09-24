@@ -43,7 +43,17 @@ public class Client2 {
 			fileName = sentence.substring(5,sentence.length());
       		byte [] byteArray  = new byte [6500000];
       		is = sock.getInputStream();
-      		fos = new FileOutputStream("downloaded.pdf");
+		//fos = new FileOutputStream("downloaded" + sentence.substring(sentence.length-3),sentence.length);
+		fos = new FileOutputStream("downloaded." + sentence.substring((sentence.length()-3),sentence.length()));
+      /*		if(sentence.contains("pdf")) {
+		fos = new FileOutputStream("downloaded.pdf");
+     		}
+     		if(sentence.contains("jpg")) {
+      		fos = new FileOutputStream("downloaded.jpg");
+		}
+		if(sentence.contains("jpg")) {
+                fos = new FileOutputStream("downloaded.jpg");
+                }*/
       		bos = new BufferedOutputStream(fos);
       		bytesRead = is.read(byteArray,0,byteArray.length);
       		current = bytesRead;
