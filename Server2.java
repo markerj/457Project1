@@ -118,6 +118,9 @@ class ServerThread extends Thread
 						{
 							System.out.println("File does not exist");
 							//outToClient.writeBytes("File does not exist");
+							outToClient.writeBytes("File does not exist");
+							outToClient.flush();
+							
 						}
                         else
                         {

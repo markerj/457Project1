@@ -47,27 +47,37 @@ public class Client2
 				{
 					if (sentence.substring(0, 4).toLowerCase().equals("send"))
 					{
-						fileName = sentence.substring(5,sentence.length());
-      					byte [] byteArray  = new byte [6500000];
-      					is = sock.getInputStream();
-						fos = new FileOutputStream("downloaded." + sentence.substring((sentence.length()-3),sentence.length()));
-      
-      					bos = new BufferedOutputStream(fos);
-      					bytesRead = is.read(byteArray,0,byteArray.length);
-      					current = bytesRead;
-	
-						while(bytesRead > -1)
+						String recieve = inFromServer.readLine();
+						if(recieve.equals("File does not exist"))
 						{
-	 						bytesRead = is.read(byteArray, current, (byteArray.length-current));
-          					if(bytesRead >= 0)
-          					{
-	   							current += bytesRead;
-            				}	
-        				}	
-      					bos.write(byteArray, 0 , current);
-      					bos.flush();
-      					System.out.println("File " + fileName + " downloaded");
-						sock = new Socket(ip, port);
+							System.out.println("File does not exist");
+							sock = new Socket(ip, port);
+						}
+						else
+						{
+							fileName = sentence.substring(5,sentence.length());
+      						byte [] byteArray  = new byte [6500000];
+      						is = sock.getInputStream();
+							fos = new FileOutputStream("downloaded." + sentence.substring((sentence.length()-3),sentence.length()));
+      
+      						bos = new BufferedOutputStream(fos);
+      						bytesRead = is.read(byteArray,0,byteArray.length);
+      						current = bytesRead;
+	
+							while(bytesRead > -1)
+							{
+	 							bytesRead = is.read(byteArray, current, (byteArray.length-current));
+          						if(bytesRead >= 0)
+          						{
+	   								current += bytesRead;
+            					}	
+        					}	
+      						bos.write(byteArray, 0 , current);
+      						bos.flush();
+      						System.out.println("File " + fileName + " downloaded");
+							sock = new Socket(ip, port);
+						}
+						
     				}
     				else if(sentence.substring(0, 4).toLowerCase().equals("list"))
     				{
@@ -81,6 +91,11 @@ public class Client2
     					System.out.println("---------------------");
     					sock = new Socket(ip, port);
     				}
+    			}
+    			else
+    			{
+    				System.out.println("That is not a known command");
+    				sock = new Socket(ip, port);
     			}
     		}
 		}
