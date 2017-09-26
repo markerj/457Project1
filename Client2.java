@@ -56,11 +56,14 @@ public class Client2 {
                     
                     //Check user entry for sendFile. Requests file from server if file exists
                     if (sentence.substring(0, 4).toLowerCase().equals("send")) {
-                        String recieve = inFromServer.readLine();
+        /*
+			    String recieve = inFromServer.readLine();
                         if (recieve.equals("File does not exist")) {
                             System.out.println("File does not exist");
                             sock = new Socket(ip, port);
-                        } else {
+                        } else   
+	*/ 
+			{
                             fileName = sentence.substring(5, sentence.length());
                             byte[] byteArray = new byte[6500000];
                             is = sock.getInputStream();
