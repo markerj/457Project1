@@ -1,3 +1,12 @@
+/***********************************
+*
+*	John Marker, Tyler Paquet
+*	CIS 457: Data Communications
+*	Project 1: TCP File Transfer
+*	Server
+*
+************************************/
+
 import java.io.*;
 import java.net.*;
 import java.nio.*;
@@ -5,6 +14,7 @@ import java.nio.channels.*;
 
 public class Server2 {
 
+    //Main thread that runs upon startup
     public static void main(String[] args) throws IOException {
 
         boolean validFile = false;
@@ -18,6 +28,8 @@ public class Server2 {
             portNum = getPort();
             servsock = new ServerSocket(portNum);
             System.out.println("Waiting for connection");
+            
+            //Every time a new connection from a client is made, a new thread is created by calling ServerThread method
             while (true) {
                 try {
                     sock = servsock.accept();
@@ -25,6 +37,7 @@ public class Server2 {
                 } catch (IOException e) {
                 }
             }
+        //Clean up and close server sockets
         } finally {
             if (servsock != null)
                 servsock.close();
@@ -32,6 +45,7 @@ public class Server2 {
 
     }
 
+    //Method to get port from user
     private static int getPort() {
         int port = 0;
         boolean valid = false;
@@ -58,6 +72,7 @@ public class Server2 {
 
 }
 
+//New class to implement threading (allows for server to service clients in any order)
 class ServerThread extends Thread {
 
     Socket sock = null;
@@ -66,6 +81,7 @@ class ServerThread extends Thread {
         this.sock = clientSocket;
     }
 
+    //Executes actions requested from the client
     public void run() {
         System.out.println("Connection established: " + sock);
         String clientSentence;
@@ -84,13 +100,15 @@ class ServerThread extends Thread {
 
                 String fileToSend = clientSentence.substring(5, clientSentence.length());
 
+                //Checks for either a sendfile request or listfile request
                 if (clientSentence.length() > 4) {
+                    
+                    //Checks for a file request
                     if (clientSentence.substring(0, 4).toLowerCase().equals("send")) {
                         File myFile = new File(fileToSend);
                         // check if myFile.exists() 
                         if (!myFile.exists() || myFile.isDirectory()) {
                             System.out.println("File does not exist");
-                            //outToClient.writeBytes("File does not exist");
                             outToClient.writeBytes("File does not exist");
                             outToClient.flush();
 
@@ -107,7 +125,7 @@ class ServerThread extends Thread {
 
                     }
 
-                    //send list of filenames
+                    //Checks for a list file request
                     else if (clientSentence.substring(0, 4).toLowerCase().equals("list")) {
                         String list = "";
                         File dir = new File(".");
@@ -122,6 +140,8 @@ class ServerThread extends Thread {
                         System.out.println("Sent list of files to Client");
                     }
                 }
+            
+            //Clean up and closes open sockets
             } finally {
                 if (bis != null)
                     bis.close();

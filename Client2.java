@@ -1,3 +1,12 @@
+/***********************************
+*
+*	John Marker, Tyler Paquet
+*	CIS 457: Data Communications
+*	Project 1: TCP File Transfer
+*	Client
+*
+************************************/
+
 import java.io.*;
 import java.nio.*;
 import java.io.ByteArrayOutputStream;
@@ -33,13 +42,19 @@ public class Client2 {
                 inFromUser = new BufferedReader(new InputStreamReader(System.in));
                 System.out.println("Commands: exit, send <filename>, listFiles");
                 sentence = inFromUser.readLine();
+                
+                //Check user entry for exit
                 if (sentence.equals("exit")) {
                     exit = true;
                 }
                 outToServer.writeBytes(sentence + '\n');
                 serverSentence = inFromServer.readLine();
                 System.out.println("Server Respone: " + serverSentence);
+                
+                //Check user entry for sendFile or listFile
                 if (sentence.length() > 4) {
+                    
+                    //Check user entry for sendFile. Requests file from server if file exists
                     if (sentence.substring(0, 4).toLowerCase().equals("send")) {
                         String recieve = inFromServer.readLine();
                         if (recieve.equals("File does not exist")) {
@@ -67,6 +82,7 @@ public class Client2 {
                             sock = new Socket(ip, port);
                         }
 
+                    //Check user entry for listFile. Sends request to server for list of files
                     } else if (sentence.substring(0, 4).toLowerCase().equals("list")) {
                         String list = inFromServer.readLine();
                         String[] splitList = list.split(" ");
@@ -82,6 +98,7 @@ public class Client2 {
                     sock = new Socket(ip, port);
                 }
             }
+        //Clean up and close outputstreams and sockets
         } finally {
             if (fos != null)
                 fos.close();
@@ -92,7 +109,7 @@ public class Client2 {
         }
     }
 
-
+	//Method to get port from user
     private static int getPort() {
         int port = 0;
         boolean valid = false;
@@ -117,7 +134,8 @@ public class Client2 {
 
         return port;
     }
-
+	
+	//Method to get IP address from user
     private static String getIP() {
         String ipAddr = "";
         boolean validIPAddr = false;
