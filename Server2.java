@@ -109,9 +109,10 @@ class ServerThread extends Thread {
                         // check if myFile.exists() 
                         if (!myFile.exists() || myFile.isDirectory()) {
                             System.out.println("File does not exist");
+                 /*
                             outToClient.writeBytes("File does not exist");
                             outToClient.flush();
-
+                   */
                         } else {
                             byte[] byteArray = new byte[(int) myFile.length()];
                             fis = new FileInputStream(myFile);
